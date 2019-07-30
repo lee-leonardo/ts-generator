@@ -1,4 +1,4 @@
-package me.ntrrgc.tsGenerator
+package me.leolee.annotation
 
 /*
 * A target for a more nuanced generation of type definition files.

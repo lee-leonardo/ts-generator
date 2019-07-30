@@ -1,3 +1,3 @@
-package me.ntrrgc.tsGenerator
+package me.leolee.annotation
 
 annotation class TSEnum
