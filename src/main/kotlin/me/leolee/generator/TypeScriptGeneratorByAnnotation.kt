@@ -98,7 +98,10 @@ class TypeScriptGeneratorByAnnotation {
                         .filter { it is TSInterface || it is TSEnum }
                         .first()
                         .let {
-                            if (it is TSInterface || it is TSEnum) {
+                            if (it is TSInterface && it.ignoreSuper) {
+                                list.add(kClass)
+                            }
+                            if (it is TSEnum && it.ignoreSuper) {
                                 list.add(kClass)
                             }
                         }
