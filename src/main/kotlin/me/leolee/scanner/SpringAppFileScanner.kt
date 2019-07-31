@@ -48,7 +48,7 @@ class SpringAppFileScanner private constructor(
 
     companion object Builder {
         fun defaultCandidateChecker() = { candidate: KClass<*> -> candidate.annotations
-                    .filter { it == TSInterface.asAnnotation() || it == TSEnum.asAnnotation() }
+                    .filter { it is TSInterface || it is TSEnum }
                     .isNotEmpty()
         }
     }
