@@ -77,9 +77,9 @@ class TypeScriptGeneratorByAnnotation {
                         .let {
                             var overrideClass: String = ""
 
-                            if (it is TSInterface) {
+                            if (it is TSInterface && it.overrideClassName.isNotBlank()) {
                                 overrideClass = it.overrideClassName
-                            } else if (it is TSEnum) {
+                            } else if (it is TSEnum && it.overrideClassName.isNotBlank()) {
                                 overrideClass = it.overrideClassName
                             }
 
@@ -95,13 +95,10 @@ class TypeScriptGeneratorByAnnotation {
             val list = mutableListOf<KClass<*>>()
             for (kClass in kClassList) {
                 kClass.annotations
-                        .filter { it is TSInterface || it is TSEnum }
+                        .filter { it is TSInterface }
                         .first()
                         .let {
                             if (it is TSInterface && it.ignoreSuper) {
-                                list.add(kClass)
-                            }
-                            if (it is TSEnum && it.ignoreSuper) {
                                 list.add(kClass)
                             }
                         }

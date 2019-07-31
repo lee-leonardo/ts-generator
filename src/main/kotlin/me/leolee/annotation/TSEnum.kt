@@ -3,6 +3,5 @@ package me.leolee.annotation
 import kotlin.reflect.KClass
 
 annotation class TSEnum(
-        val overrideClassName: String = "",
-        val ignoreSuper: Boolean = false
+        val overrideClassName: String = ""
 )
