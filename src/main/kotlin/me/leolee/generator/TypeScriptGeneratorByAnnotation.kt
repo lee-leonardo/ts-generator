@@ -5,6 +5,7 @@ import me.leolee.annotation.TSInterface
 import me.leolee.scanner.SpringAppFileScanner
 import me.ntrrgc.tsGenerator.ClassTransformer
 import me.ntrrgc.tsGenerator.TypeScriptGenerator
+import java.io.File
 import kotlin.reflect.KClass
 
 
@@ -52,17 +53,18 @@ class TypeScriptGeneratorByAnnotation {
                 ignoreSuperclasses.addAll(generateIgnoreSuperclasses(classesToAdd))
 
             }
-
             val typeDefStr = generateDefinitionFile(classes, overriddenClasses, classTransformers, ignoreSuperclasses)
 
             // TODO IO
+            if (resolvePath(bundleDestinationPath)) {
+                writeFile(bundleName, bundleDestinationPath, typeDefStr)
+            }
         }
 
-        // TODO
         fun createFileFromRootDirectory(
             bundleName: String,
             bundleDestinationPath: String,
-            roomDirectoryPath: String) {
+            rootDirectoryPath: String) {
 
             //createFileFromGeneratedDefinitionFiles()
         }
@@ -106,6 +108,37 @@ class TypeScriptGeneratorByAnnotation {
 
             return list
         }
-    }
 
+        // Resolve paths, handle OS.
+        private fun generateFilePath(bundleName: String, bundleDestinationPath: String): String {
+            var path = bundleDestinationPath
+            if (bundleDestinationPath.subSequence(bundleDestinationPath.length - 2..bundleDestinationPath.length)
+                            .toString() == "\\\\") {
+                path += "\\\\"
+
+            }
+            else if (bundleDestinationPath.last() != '/') {
+                path += "/"
+            }
+
+            return "$path$bundleName.d.ts"
+        }
+
+        // Write File
+        private fun writeFile(bundleName: String, bundleDestinationPath: String, fileText: String) {
+            val fileRef = File(generateFilePath(bundleName, bundleDestinationPath))
+
+            if (fileRef.isFile && fileRef.canRead()) {
+                fileRef.delete()
+            }
+
+            fileRef.createNewFile()
+            fileRef.writeText(fileText)
+        }
+
+        // Short circuit if the directory exists, else generate the necessary directories
+        private fun resolvePath(bundleDestinationPath: String): Boolean {
+            return File(bundleDestinationPath).isDirectory || File(bundleDestinationPath).mkdirs()
+        }
+    }
 }
